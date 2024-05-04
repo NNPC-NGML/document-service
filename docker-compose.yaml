@@ -1,0 +1,47 @@
+version: "3.2"
+services:
+  document-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "php artisan serve --host=0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - 1050:8000
+    networks:
+      - document_network
+
+  document_queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "php artisan queue:work"
+    networks:
+      - automator_network
+
+  mysql:
+    image: mariadb:10.5.8
+    environment:
+      - MYSQL_ROOT_PASSWORD=Ubuxa##99
+      - MYSQL_DATABASE=forge
+      - MYSQL_USER=forge
+      - MYSQL_PASSWORD=Ubuxa##99
+    networks:
+      - document_network
+  # phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 1051:80
+    environment:
+      - PMA_HOST=mysql
+      - PMA_PASSWORD=Ubuxa##99
+    networks:
+      - document_network
+    restart: unless-stopped
+    volumes:
+      - .:/app
+
+networks:
+  document_network:
