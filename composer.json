@@ -14,6 +14,7 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.0",
         "skillz-systems/user-service": "dev-main",
+        "skillz/nnpcreusable": "^1.5",
         "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.0"
     },
     "require-dev": {

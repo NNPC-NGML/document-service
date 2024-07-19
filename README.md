@@ -16,38 +16,38 @@
 
 # Make Commands
 
- **1. To Start App
-         make start**
+**1. To Start App
+make start**
 
- **2. to stop App
-         make stop**
+**2. to stop App
+make stop**
 
- **3. To rebuild and start the App
-         make fresh**
+**3. To rebuild and start the App
+make fresh**
 
- **4. To Destroy All contaner
-         make destroy**
+**4. To Destroy All contaner
+make destroy**
 
- **5. To restart container
-         make restart**
+**5. To restart container
+make restart**
 
- **7. to ssh into the parent container
-         make ssh**
+**7. to ssh into the parent container
+make ssh**
 
- **8. To run Migration on the parent container
-         make migrate**
+**8. To run Migration on the parent container
+make migrate**
 
- **9. To run a fresh migration
-         make migrate-fresh**
+**9. To run a fresh migration
+make migrate-fresh**
 
- **10. To run test
-          make tests**
+**10. To run test
+make tests**
 
- **11. To run lint check
-          make lint**
+**11. To run lint check
+make lint**
 
- **12. To fix lint issues
-          make lint-fix**
+**12. To fix lint issues
+make lint-fix**
 
 **Cheers!!!!**
 
@@ -57,11 +57,11 @@ A sample test case MiddlewareSampleTest has be added, NOTE: the authentication m
 
 ### Installation of the package (package is already installed)
 
-* to install the package run ***composer require skillz-systems/user-service dev-main***
-* then add the package to your autoload. ie **composer.json** under **"autoload"** then **psr-4**   ****"Skillz\\": "vendor/skillz-systems/user-service/src/"***
-* then run ***composer dump***
-* then **TESTING PURPOSE** go to **phpunit.xml**  and add `<env name="USERS_MS" value="your ip address:docker port"/> `
-* Also, add **USER_MS** to your env file
+-   to install the package run **_composer require skillz-systems/user-service dev-main_**
+-   then add the package to your autoload. ie **composer.json** under **"autoload"** then **psr-4** \***_"Skillz\\": "vendor/skillz-systems/user-service/src/"_**
+-   then run **_composer dump_**
+-   then **TESTING PURPOSE** go to **phpunit.xml** and add `<env name="USERS_MS" value="your ip address:docker port"/> `
+-   Also, add **USER_MS** to your env file
 
 ### Ckecklist to run microservice
 
@@ -73,7 +73,37 @@ A sample test case MiddlewareSampleTest has be added, NOTE: the authentication m
 
 To review the skillz package go the following files
 
-* Go to namespace ***App\Http\Middleware** *and open **UsersMiddleware.php**
-* In config folder open **skillz.php**
-* Go to ***project-boilerplate\vendor\skillz-systems\user-service\src**** see the package
-* Go to **composer.json** under **"autoload"** then **psr-4***"Skillz\\": "vendor/skillz-systems/user-service/src/"*
+-   Go to namespace **\*App\Http\Middleware** \*and open **UsersMiddleware.php**
+-   In config folder open **skillz.php**
+-   Go to **\*project-boilerplate\vendor\skillz-systems\user-service\src\*\*** see the package
+-   Go to **composer.json** under **"autoload"** then **psr-4\***"Skillz\\": "vendor/skillz-systems/user-service/src/"\*
+
+### Github Action Modification
+
+its important for the github action to be modified to point to the correct service for deployment .
+
+-   below are things to be changed or modified
+
+-   search for the keyword "service_name_placeholder" and replace it with the correct service name refer to service name list below .
+
+### Service Name List
+
+-   automator
+-   communication
+-   customer
+-   document
+-   formbuilder
+-   notification
+-   processflow
+-   users
+
+### Queue Name List
+
+-   automator_queue
+-   communication_queue
+-   customer_queue
+-   document_queue
+-   formbuilder_queue
+-   notification_queue
+-   processflow_queue
+-   users_queue
