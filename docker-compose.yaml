@@ -1,6 +1,6 @@
 version: "3.2"
 services:
-  document-service:
+  document_service:
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,9 +18,9 @@ services:
       dockerfile: Dockerfile
     command: "php artisan queue:work"
     networks:
-      - automator_network
+      - document_network
 
-  mysql:
+  document_database:
     image: mariadb:10.5.8
     environment:
       - MYSQL_ROOT_PASSWORD=Ubuxa##99
@@ -29,13 +29,13 @@ services:
       - MYSQL_PASSWORD=Ubuxa##99
     networks:
       - document_network
-  # phpmyadmin
-  phpmyadmin:
+
+  document_phpmyadmin:
     image: phpmyadmin
     ports:
       - 1051:80
     environment:
-      - PMA_HOST=mysql
+      - PMA_HOST=document_database
       - PMA_PASSWORD=Ubuxa##99
     networks:
       - document_network
