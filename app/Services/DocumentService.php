@@ -44,6 +44,28 @@ class DocumentService
     }
 
     /**
+     * Update a document.
+     *
+     * @param array $request The request data containing document details and file content.
+     * @throws ValidationException If the validation of request data fails.
+     */
+    public function update(array $request): void
+    {
+        // TODO
+    }
+
+    /**
+     * Delete a document.
+     *
+     * @param int $id The request id of the document.
+     * @throws ValidationException If the validation of request data fails.
+     */
+    public function delete(int $id): void
+    {
+        // TODO
+    }
+
+    /**
      * Upload a base64 encoded file.
      *
      * @param string $base64File The base64 encoded file content.
