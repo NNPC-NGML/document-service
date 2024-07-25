@@ -17,7 +17,7 @@ class CustomerDeletedTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Queue::fake(); // Optionally, fake the queue if you want to test that jobs are dispatched correctly
+        Queue::fake();
     }
 
     public function testCustomerDeletedSuccess()
@@ -26,7 +26,6 @@ class CustomerDeletedTest extends TestCase
         $customer = Customer::create([
             'company_name' => 'John Doe Company',
             'company_email' => 'john@example.com',
-            // other necessary fields
         ]);
 
         // Assuming DocumentService expects some document related to the customer

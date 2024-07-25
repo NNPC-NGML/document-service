@@ -2,7 +2,7 @@
 
 namespace App\Jobs\CustomerSite;
 
-
+use App\Services\DocumentService;
 use Illuminate\Bus\Queueable;
 use Skillz\Nnpcreusable\Service\CustomerService;
 use Illuminate\Queue\SerializesModels;
@@ -47,10 +47,9 @@ class CustomerSiteUpdated implements ShouldQueue
      *
      * @return void
      */
-    public function handle(): void
+    public function handle(CustomerService $customerService, DocumentService $documentService): void
     {
-
-        $service = new  CustomerService();
-        $service->updateCustomerSite($this->data, $this->id);
+        $customerService->updateCustomerSite($this->data, $this->id);
+        $documentService->update($this->data);
     }
 }

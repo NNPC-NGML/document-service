@@ -24,10 +24,8 @@ class CustomerSiteDeleted implements ShouldQueue
      *
      * @return void
      */
-    public function handle(): void
+    public function handle(CustomerService $customerService): void
     {
-
-        $service = new  CustomerService();
-        $service->DestroyCustomerSite($this->id);
+        $customerService->destroyCustomerSite($this->id);
     }
 }

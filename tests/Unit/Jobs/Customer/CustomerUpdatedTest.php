@@ -17,22 +17,16 @@ class CustomerUpdatedTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Queue::fake(); // Optionally, fake the queue if you want to test that jobs are dispatched correctly
+        Queue::fake();
     }
 
-    public function testHandle()
+    public function testCustomerUpdatedSuccess()
     {
         // Prepare test data
         $customer = Customer::create([
             'company_name' => 'John Doe Company',
             'company_email' => 'john@example.com',
-            // other necessary fields
         ]);
-
-        // Assuming DocumentService expects some document related to the customer
-        // Here you would need to adjust according to your actual DocumentService implementation
-        // Example:
-        // Document::create(['customer_id' => $customer->id, 'file_name' => 'document1.pdf']);
 
         // Updated data
         $updatedData = [
@@ -40,11 +34,15 @@ class CustomerUpdatedTest extends TestCase
             'company_name' => 'Jane Doe Company',
             'company_email' => 'jane@example.com',
             // other updated fields
+            'entity_id' => 20,
+            'entity_name' => 'TestEntity',
+            'tag' => 'TestTag',
+            'file_name' => 'testfile.txt',
+            'file_content' => base64_encode('Test file content')
         ];
 
         // Check that the customer and associated documents exist before running the job
         $this->assertDatabaseHas('customers', ['id' => $customer->id, 'company_name' => 'John Doe Company']);
-        // $this->assertDatabaseHas('documents', ['customer_id' => $customer->id, 'file_name' => 'document1.pdf']);
 
         // Create the job instance
         $job = new CustomerUpdated($updatedData);
@@ -60,6 +58,6 @@ class CustomerUpdatedTest extends TestCase
         $this->assertDatabaseHas('customers', ['id' => $customer->id, 'company_name' => 'Jane Doe Company']);
         $this->assertDatabaseHas('customers', ['id' => $customer->id, 'company_email' => 'jane@example.com']);
         // Adjust these assertions based on your actual DocumentService implementation
-        // $this->assertDatabaseHas('documents', ['customer_id' => $customer->id, 'file_name' => 'document1.pdf']);
+        $this->assertDatabaseHas('documents', ['entity_id' => $updatedData['entity_id'], 'entity_name' => $updatedData['entity_name']]);
     }
 }

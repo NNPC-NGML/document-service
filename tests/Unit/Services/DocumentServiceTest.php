@@ -10,6 +10,7 @@ use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Faker\Factory as Faker;
 
 /**
  * Class DocumentServiceTest
@@ -89,16 +90,23 @@ class DocumentServiceTest extends TestCase
      */
     public function testUploadBase64()
     {
-        $base64File = base64_encode('Test file content');
+        $faker = Faker::create();
+        $content = $faker->text;
+        $base64File = base64_encode($content);
         $fileName = 'testfile.txt';
 
-        Storage::shouldReceive('disk->put')->andReturn('documents/testfile.txt');
+        // Mock the storage
+        Storage::shouldReceive('disk->put')
+            ->once()
+            ->with('documents/testfile.txt', $content)
+            ->andReturn('documents/testfile.txt');
 
         $fileObject = $this->documentService->uploadBase64($base64File, $fileName);
 
         $this->assertInstanceOf(FileObject::class, $fileObject);
-        $this->assertEquals('testfile.txt', $fileObject->name);
+        $this->assertEquals($fileName, $fileObject->name);
         $this->assertEquals('txt', $fileObject->extension);
+        $this->assertEquals(strlen($content), $fileObject->size);
         $this->assertEquals('text/plain', $fileObject->mimetype);
     }
 
@@ -109,17 +117,28 @@ class DocumentServiceTest extends TestCase
      */
     public function testUploadFile()
     {
-        $file = UploadedFile::fake()->create('testfile.txt', 1, 'text/plain');
+        $faker = Faker::create();
+        $fileName = 'testfile.txt';
+        $fileContent = $faker->text;
 
-        Storage::shouldReceive('disk->putFileAs')->andReturn('documents/testfile.txt');
+        // Create a fake uploaded file
+        $file = UploadedFile::fake()->createWithContent($fileName, $fileContent);
 
+        // Define the path where the file will be stored
+        $path = "documents/{$fileName}";
+
+        // Store the file on the fake disk
+        Storage::disk(config('filesystems.default'))->put($path, $fileContent);
+
+        // Call the method being tested
         $fileObject = $this->documentService->uploadFile($file);
 
+        // Assertions
         $this->assertInstanceOf(FileObject::class, $fileObject);
-        $this->assertEquals('testfile.txt', $fileObject->name);
+        $this->assertEquals($fileName, $fileObject->name);
         $this->assertEquals('txt', $fileObject->extension);
-        $this->assertEquals('text/plain', $fileObject->mimetype);
-        $this->assertEquals(1024, $fileObject->size);
+        $this->assertEquals(strlen($fileContent), $fileObject->size);
+        $this->assertEquals($file->getMimeType(), $fileObject->mimetype);
     }
 
     /**

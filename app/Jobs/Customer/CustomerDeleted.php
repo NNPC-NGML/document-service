@@ -48,6 +48,5 @@ class CustomerDeleted implements ShouldQueue
     public function handle(CustomerService $customerService, DocumentService $documentService): void
     {
         $customerService->destroyCustomer($this->id);
-        $documentService->delete($this->id);
     }
 }

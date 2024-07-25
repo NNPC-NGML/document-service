@@ -2,7 +2,8 @@
 
 namespace App\Services;
 
-use App\Http\Resources\DocumentResource;
+use App\Jobs\Document\DocumentCreated;
+use App\Jobs\Document\DocumentUpdated;
 use App\Models\Document;
 use App\Models\FileObject;
 use Illuminate\Support\Str;
@@ -26,21 +27,19 @@ class DocumentService
      */
     public function create(array $request): void
     {
-        $data = $this->validate($request);
-        $fileObject = $this->uploadBase64($data['file_content'], $data['file_name']);
+        $validated = $this->validate($request);
+        $fileObject = $this->uploadBase64($validated['file_content'], $validated['file_name']);
 
         // Save document metadata in the database
         $document = Document::create([
-            "entity_id" => $request['entity_id'],
-            "entity_name" => $request['entity_name'],
-            "tag" => $request['tag'],
+            "entity_id" => $validated['entity_id'],
+            "entity_name" => $validated['entity_name'],
+            "tag" => $validated['tag'],
             "file_object" => $fileObject->toArray(),
-            "file_content" => $request['file_content'],
+            "file_content" => $validated['file_content'],
         ]);
-        $data = new DocumentResource($document);
-
-        // TODO
-        // dispatch a job to send a response with their respective tage on ($data)
+        $data = array_merge($request, $document->toArray());
+        DocumentCreated::dispatch($data)->onQueue(config("nnpcreusable.DOCUMENT_TASK_CREATED"));
     }
 
     /**
@@ -51,18 +50,19 @@ class DocumentService
      */
     public function update(array $request): void
     {
-        // TODO
-    }
+        $validated = $this->validate($request);
+        $fileObject = $this->uploadBase64($validated['file_content'], $validated['file_name']);
 
-    /**
-     * Delete a document.
-     *
-     * @param int $id The request id of the document.
-     * @throws ValidationException If the validation of request data fails.
-     */
-    public function delete(int $id): void
-    {
-        // TODO
+        // Save document metadata in the database
+        $document = Document::create([
+            "entity_id" => $validated['entity_id'],
+            "entity_name" => $validated['entity_name'],
+            "tag" => $validated['tag'],
+            "file_object" => $fileObject->toArray(),
+            "file_content" => $validated['file_content'],
+        ]);
+        $data = array_merge($request, $document->toArray());
+        DocumentUpdated::dispatch($data)->onQueue(config("nnpcreusable.DOCUMENT_TASK_UPDATED"));
     }
 
     /**
@@ -92,8 +92,14 @@ class DocumentService
         $fileMimeType = mime_content_type($tmpFilePath);
         $fileSize = filesize($tmpFilePath);
 
-        // Store the file on S3
-        $path = Storage::disk('s3')->put('documents', $tmpFilePath);
+        // Determine the storage disk
+        $disk = config('filesystems.default');
+
+        // Generate the full path for storing the file
+        $path = "documents/{$fileName}";
+
+        // Store the file on the determined disk
+        Storage::disk($disk)->put($path, file_get_contents($tmpFilePath));
 
         // Remove the temporary file
         unlink($tmpFilePath);
@@ -119,8 +125,11 @@ class DocumentService
      */
     public function uploadFile(UploadedFile $file): FileObject
     {
-        // Store the file on S3
-        $path = $file->store('documents', 's3');
+        // Determine the storage disk
+        $disk = config('filesystems.default');
+
+        // Store the file on the determined disk
+        $path = $file->store('documents', $disk);
 
         // Create a FileObject instance
         $fileObject = new FileObject(

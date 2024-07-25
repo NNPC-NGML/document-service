@@ -61,4 +61,7 @@ return [
 
     'TAG_CREATED' => explode(",", env('TAG_CREATED', '')),
 
+    'DOCUMENT_TASK_CREATED' => explode(",", env('DOCUMENT_TASK_CREATED', '')),
+    'DOCUMENT_TASK_UPDATED' => explode(",", env('DOCUMENT_TASK_UPDATED', '')),
+    'DOCUMENT_TASK_DELETED' => explode(",", env('DOCUMENT_TASK_DELETED', '')),
 ];
