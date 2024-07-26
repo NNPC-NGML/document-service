@@ -5,7 +5,6 @@ namespace Tests\Unit\Jobs\CustomerSite;
 use Tests\TestCase;
 use App\Jobs\CustomerSite\CustomerSiteCreated;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Skillz\Nnpcreusable\Service\CustomerService;
 use App\Services\DocumentService;
 
 class CustomerSiteCreatedTest extends TestCase
@@ -34,21 +33,18 @@ class CustomerSiteCreatedTest extends TestCase
         ];
 
         // Ensure the database starts empty
-        $this->assertDatabaseMissing('customer_sites', ['site_email' => $data['site_email']]);
         $this->assertDatabaseMissing('documents', ['entity_id' => $data['entity_id']]);
 
         // Instantiate services
-        $customerService = app(CustomerService::class);
         $documentService = app(DocumentService::class);
 
         // Create the job instance
         $job = new CustomerSiteCreated($data);
 
         // Run the job
-        $job->handle($customerService, $documentService);
+        $job->handle($documentService);
 
         // Assertions to verify the job worked as expected
-        $this->assertDatabaseHas('customer_sites', ['site_email' => $data['site_email']]);
         $this->assertDatabaseHas('documents', ['entity_id' => $data['entity_id']]);
     }
 }

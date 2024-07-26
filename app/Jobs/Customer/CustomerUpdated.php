@@ -4,7 +4,6 @@ namespace App\Jobs\Customer;
 
 use App\Services\DocumentService;
 use Illuminate\Bus\Queueable;
-use Skillz\Nnpcreusable\Service\CustomerService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -49,13 +48,11 @@ class CustomerUpdated implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param CustomerService $customerService The service responsible for updating customers.
      * @param DocumentService $documentService The service responsible for updating documents.
      * @return void
      */
-    public function handle(CustomerService $customerService, DocumentService $documentService): void
+    public function handle(DocumentService $documentService): void
     {
-        $customerService->updateCustomer($this->data, $this->id);
         $documentService->update($this->data);
     }
 }

@@ -3,9 +3,7 @@
 namespace App\Jobs\Customer;
 
 use App\Services\DocumentService;
-use Skillz\Nnpcreusable\Models\Customer;
 use Illuminate\Bus\Queueable;
-use Skillz\Nnpcreusable\Service\CustomerService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -42,13 +40,11 @@ class CustomerCreated implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param CustomerService $customerService The service responsible for creating customers.
      * @param DocumentService $documentService The service responsible for creating documents.
      * @return void
      */
-    public function handle(CustomerService $customerService, DocumentService $documentService): void
+    public function handle(DocumentService $documentService): void
     {
-        $customerService->createCustomer($this->data);
         $documentService->create($this->data);
     }
 }

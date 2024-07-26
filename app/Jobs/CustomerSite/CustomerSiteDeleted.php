@@ -4,7 +4,6 @@ namespace App\Jobs\CustomerSite;
 
 
 use Illuminate\Bus\Queueable;
-use Skillz\Nnpcreusable\Service\CustomerService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -24,8 +23,7 @@ class CustomerSiteDeleted implements ShouldQueue
      *
      * @return void
      */
-    public function handle(CustomerService $customerService): void
+    public function handle(): void
     {
-        $customerService->destroyCustomerSite($this->id);
     }
 }

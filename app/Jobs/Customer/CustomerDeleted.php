@@ -2,9 +2,7 @@
 
 namespace App\Jobs\Customer;
 
-use App\Services\DocumentService;
 use Illuminate\Bus\Queueable;
-use Skillz\Nnpcreusable\Service\CustomerService;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -41,12 +39,9 @@ class CustomerDeleted implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param CustomerService $customerService The service responsible for deleting customers.
-     * @param DocumentService $documentService The service responsible for deleting documents.
      * @return void
      */
-    public function handle(CustomerService $customerService, DocumentService $documentService): void
+    public function handle(): void
     {
-        $customerService->destroyCustomer($this->id);
     }
 }
