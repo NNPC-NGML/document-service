@@ -22,4 +22,4 @@ COPY . /app
 RUN composer install
 
 # Expose the port and start the PHP server
-# EXPOSE $PORT
+EXPOSE $PORT
