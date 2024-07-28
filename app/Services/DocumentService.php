@@ -39,7 +39,12 @@ class DocumentService
             "file_content" => $validated['file_content'],
         ]);
         $data = array_merge($request, $document->toArray());
-        DocumentCreated::dispatch($data)->onQueue(config("nnpcreusable.DOCUMENT_TASK_CREATED"));
+        $documentCreatedQueues = config("nnpcreusable.DOCUMENT_TASK_CREATED");
+        foreach ($documentCreatedQueues as $queue) {
+            if(!empty($queue)){
+                DocumentCreated::dispatch($data)->onQueue($queue);
+            }
+        }
     }
 
     /**
@@ -62,7 +67,12 @@ class DocumentService
             "file_content" => $validated['file_content'],
         ]);
         $data = array_merge($request, $document->toArray());
-        DocumentUpdated::dispatch($data)->onQueue(config("nnpcreusable.DOCUMENT_TASK_UPDATED"));
+        $documentUpdatedQueues = config("nnpcreusable.DOCUMENT_TASK_UPDATED");
+        foreach ($documentUpdatedQueues as $queue) {
+            if(!empty($queue)){
+                DocumentUpdated::dispatch($data)->onQueue($queue);
+            }
+        }
     }
 
     /**
